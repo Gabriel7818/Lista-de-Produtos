@@ -1,0 +1,21 @@
+{
+  "name": "tarefa-model-categories",
+  "version": "1.0.0",
+  "description": "Tarefa para Model Categories",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel Oliveira",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.18"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.0"
+  }
+}
