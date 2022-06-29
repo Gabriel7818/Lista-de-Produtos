@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../db')
 
-const Produtos = db.define('lista_de_produtos', {
+const Category = db.define('goliveira_categories', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -27,4 +27,4 @@ const Produtos = db.define('lista_de_produtos', {
 // Verificar se há alguma diferença na tabela, realiza alteração
 // Produtos.sync({alter: true});
 
-module.exports = Produtos;
+module.exports = Category;

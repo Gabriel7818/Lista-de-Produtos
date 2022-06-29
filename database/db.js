@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('senac', 'root', '', {
-    host: 'localhost',
+const sequelize = new Sequelize('u594655419_senac', 'u594655419_owa', 'Senac2022@dmin',{
+    host: 'sql408.main-hosting.eu',
     dialect: 'mysql'
 });
 

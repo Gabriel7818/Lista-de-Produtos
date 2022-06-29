@@ -1,5 +1,6 @@
 const express = require('express');
-const Produto = require('./database/models/Products');
+const Category = require('./database/models/Category');
+const Product = require('./database/models/Product');
 const app = express();
 require('dotenv').config()
 
@@ -7,41 +8,43 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get("/", async (req, res) => {
-    res.send("Serviço Iniciado com Sucesso !");
+    res.send("Serviço de API Iniciado com Sucesso !");
 });
 
+// Categorias
+
 // Get
-app.get("/produtos", async (req, res) => {
-    await User.findAll({
+app.get("/categories", async (req, res) => {
+    await Category.findAll({
         attributes: ['id', 'name', 'description'],
         order:[['name', 'ASC']]
-    }).then((produtos) => {
+    }).then((products) => {
         return res.json({
             erro: false,
-            produtos
+            products
         });
     }).catch((err) => {
         return res.status(400).json({
             erro: true,
-            mensagem: `Nenhum Produto Encontrado. Erro:${err}`
+            mensagem: `Nenhuma Categoria Encontrada. Erro:${err}`
         });
     });
 });
 
 // Get
-app.get('/produtos/:id', async (req, res) => {
+app.get('/categories/:id', async (req, res) => {
     const {id} = req.params;
     try {
-        const produtos = await Produto.findByPk(id);
-        if(!produtos){
+        const categories = await Category.findByPk(id);
+        if(!categories){
             return res.status(400).json({
                 erro: true,
-                mensagem: "Erro: Nenhum Produto Encontrado"
+                mensagem: "Erro: Nenhuma Categoria Encontrada"
             });
         };
         res.status(200).json({
             erro: false,
-            produtos
+            categories
         });
     }catch(err){
         res.status(400).json({
@@ -52,11 +55,107 @@ app.get('/produtos/:id', async (req, res) => {
 });
 
 // Post
-app.post("/produto", async (req, res) => {
+app.post("/category", async (req, res) => {
     var dados = req.body;
     console.log(dados);
 
-    await Produto.create(req.body)
+    await Category.create(req.body)
+    .then(() => {
+        return res.json({
+            erro: false,
+            mensagem: 'Categoria Registrada com Sucesso !'
+        });
+    }).catch((err) => {
+        return res.status(400).json({
+            erro: true,
+            mensagem: `Erro: Categoria não Registrada ${err}`
+        });
+    });
+});
+
+// Put
+app.put("/category", async (req, res) => {
+    const {id} = req.body;
+
+    await Category.update(req.body, {where: {id}})
+    .then(() => {
+        return res.json({
+            erro: false,
+            mensagem: 'Categoria Alterada com Sucesso !'
+        });
+    }).catch((err) => {
+        return res.status(400).json({
+            erro: true,
+            mensagem: `Categoria não Alterada. Erro: ${err}`
+        });
+    });
+});
+
+// Delete
+app.delete("/category/:id", async (req, res) => {
+    const {id} = req.params;
+    await Category.destroy({where:{id}})
+    .then(() => {
+        return res.json({
+            erro: false,
+            mensagem: "Categoria Deletada com Sucesso !"
+        });
+    }).catch((err) => {
+        return res.status(400).json({
+            erro: true,
+            mensagem: `Categoria não Deletada. Erro: ${err}`
+        });
+    });
+});
+
+// Produtos
+
+app.get("/products", async (req, res) => {
+    await Category.findAll({
+        attributes: ['id', 'name', 'description'],
+        order:[['name', 'ASC']]
+    }).then((product) => {
+        return res.json({
+            erro: false,
+            product
+        });
+    }).catch((err) => {
+        return res.status(400).json({
+            erro: true,
+            mensagem: `Nenhum Produto Encontrado. Erro:${err}`
+        });
+    });
+});
+
+// Get
+app.get('/products/:id', async (req, res) => {
+    const {id} = req.params;
+    try {
+        const products = await Category.findByPk(id);
+        if(!products){
+            return res.status(400).json({
+                erro: true,
+                mensagem: "Erro: Nenhum Produto Encontrado"
+            });
+        };
+        res.status(200).json({
+            erro: false,
+            products
+        });
+    }catch(err){
+        res.status(400).json({
+            erro: true,
+            mensagem: `Erro: ${err}`
+        });
+    };
+});
+
+// Post
+app.post("/product", async (req, res) => {
+    var dados = req.body;
+    console.log(dados);
+
+    await Product.create(req.body)
     .then(() => {
         return res.json({
             erro: false,
@@ -70,11 +169,11 @@ app.post("/produto", async (req, res) => {
     });
 });
 
-// Put
-app.put("/produto", async (req, res) => {
+// Put (Update)
+app.put("/product", async (req, res) => {
     const {id} = req.body;
 
-    await User.update(req.body, {where: {id}})
+    await Product.update(req.body, {where: {id}})
     .then(() => {
         return res.json({
             erro: false,
@@ -89,9 +188,10 @@ app.put("/produto", async (req, res) => {
 });
 
 // Delete
-app.delete("/produto/:id", async (req, res) => {
+app.delete("/products/:id", async (req, res) => {
     const {id} = req.params;
-    await Produto.destroy({where:{id}})
+
+    await Product.destroy({where:{id}})
     .then(() => {
         return res.json({
             erro: false,
